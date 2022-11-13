@@ -1,0 +1,19 @@
+extends: "default"
+rules:
+  line-length: "disable"
+  braces:
+    forbid: true
+  document-end:
+    present: false
+  document-start:
+    present: false
+  empty-lines:
+    max: 0
+    max-start: 0
+    max-end: 0
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+  quoted-strings:
+    quote-type: "double"
+    required: true

@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "slackbox"
+version = "0.1.0"
+description = "the beerbox's slack integration"
+authors = ["Thibault Defeyter <defeyter.thibault@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+slack-bolt = "^1.15.3"
+
+[tool.poetry.group.dev.dependencies]
+bandit = "^1.7.4"
+black = "^22.10.0"
+flake8 = "^5.0.4"
+flake8-pyproject = "^1.1.0.post0"
+ipython = "^8.6.0"
+isort = "^5.10.1"
+mypy = "^0.990"
+pre-commit = "^2.20.0"
+pylint = "^2.15.5"
+
+[tool.black]
+line-length = 99
+
+[tool.isort]
+line_length = 99
+force_single_line = true
+
+[tool.flake8]
+max-line-length = 99
+
+[tool.mypy]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+
+[tool.pylint.format]
+max-line-length=99
+
+[tool.pylint.main]
+disable = [
+    "too-few-public-methods",
+    "unnecessary-ellipsis",
+    "missing-module-docstring",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
