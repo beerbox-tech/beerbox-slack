@@ -1,0 +1,97 @@
+openapi: "3.0.2"
+info:
+  title: "slackbox"
+  version: "0.1"
+components:
+  schemas:
+    HealthCheck:
+      type: "object"
+      required:
+        - "name"
+        - "time"
+        - "status"
+        - "observedValue"
+        - "observedUnit"
+      properties:
+        name:
+          type: "string"
+        time:
+          type: "string"
+          format: "date-time"
+        status:
+          type: "string"
+          enum:
+            - "fail"
+            - "pass"
+        observedValue:
+          type: "string"
+        observedUnit:
+          type: "string"
+    HealthResponse:
+      type: "object"
+      required:
+        - "status"
+        - "checks"
+        - "version"
+        - "service"
+      properties:
+        status:
+          type: "string"
+          enum:
+            - "fail"
+            - "pass"
+        checks:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/HealthCheck"
+        version:
+          type: "string"
+        service:
+          type: "string"
+    ErrorResponse:
+      type: "object"
+      required:
+        - "code"
+        - "message"
+      properties:
+        code:
+          type: "string"
+        message:
+          type: "string"
+        data:
+          oneOf:
+            - type: "object"
+            - type: "array"
+paths:
+  /livez:
+    get:
+      summary: "get liveness probe"
+      tags:
+        - "health"
+      description: "Get the liveness probe of the applicative server"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /readyz:
+    get:
+      summary: "get the readiness probe"
+      tags:
+        - "health"
+      description: "Get the readiness probe of the applicative server"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: "Service Unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"

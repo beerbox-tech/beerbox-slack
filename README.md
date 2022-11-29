@@ -1,3 +1,3 @@
-# beerbox-slackbox
+# slackbox
 
-the beerbox's slack integration
+beerbox slack client
