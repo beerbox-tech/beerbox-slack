@@ -1,0 +1,46 @@
+#!/usr/bin/env python3.10
+# pylint: disable=broad-except
+# pylint: disable=invalid-name
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-function-docstring
+
+import argparse
+import os
+import sys
+from argparse import Namespace
+from pathlib import Path
+
+from lib import run_with_state  # type: ignore
+
+
+def parse_args() -> Namespace:
+    parser = argparse.ArgumentParser(
+        prog="init",
+        description="Initialise environment",
+    )
+    return parser.parse_args()
+
+
+def _get_root(path_: Path) -> Path:
+    if path_.joinpath(".git").exists():
+        return path_
+    if path_.parent == path_:
+        raise ValueError("unable to get git root folder")
+    return _get_root(path_.parent)
+
+
+def main() -> int:
+    run_with_state("Install python virtual env", ("poetry", "install"))
+    if os.getenv("CI"):
+        return 0
+    root = _get_root(Path(__file__))
+    git_hooks = root.joinpath(Path(".git") / Path("hooks"))
+    script_hooks = root.joinpath(Path("scripts") / Path("hooks"))
+    run_with_state("Clean current git hooks", ("rm", "-rf", str(git_hooks)))
+    run_with_state("Link hooks folders", ("ln", "-s", str(script_hooks), str(git_hooks)))
+    return 0
+
+
+if __name__ == "__main__":
+    kwargs = parse_args()
+    sys.exit(main(**kwargs.__dict__))

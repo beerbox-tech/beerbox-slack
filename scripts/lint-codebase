@@ -1,0 +1,39 @@
+#!/usr/bin/env python3.10
+# pylint: disable=invalid-name
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+
+import argparse
+import sys
+from argparse import Namespace
+
+from lib import run_with_state  # type: ignore
+
+CHECKS = (
+    ("format python using black", ("poetry", "run", "black", "./")),
+    ("format python using isort", ("poetry", "run", "isort", "./")),
+    ("check python using flake8", ("poetry", "run", "flake8", "./")),
+    ("check python using bandit", ("poetry", "run", "bandit", "./")),
+    ("check python using mypy", ("poetry", "run", "mypy", "scripts", "src")),
+    ("check python using pylint", ("poetry", "run", "pylint", "scripts", "src")),
+    ("check yaml using yamllint", ("poetry", "run", "yamllint", "./")),
+)
+
+
+def parse_args() -> Namespace:
+    parser = argparse.ArgumentParser(
+        prog="lint-codebase",
+        description="Lint the codebase",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    results = [run_with_state(message, command) for message, command in CHECKS]
+    return 1 if sum(results) else 0
+
+
+if __name__ == "__main__":
+    kwargs = parse_args()
+    sys.exit(main(**kwargs.__dict__))

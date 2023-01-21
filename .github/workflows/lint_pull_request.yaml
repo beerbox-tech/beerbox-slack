@@ -1,0 +1,18 @@
+name: lint-pull-request
+on: [pull_request]
+jobs:
+  lint-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Lint commit messages
+        env:
+          FROM: ${{ github.event.pull_request.base.sha }}
+          TO: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git log --format='%h %s' $FROM..$TO | while read -r commit message;
+          do scripts/lint-commit --commit "$commit" --message "$message";
+          done

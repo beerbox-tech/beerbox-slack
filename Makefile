@@ -19,15 +19,15 @@ TESTED_PORT ?= 8000
 
 .PHONY: init
 init: ## initialise local environment
-	@poetry install
+	@scripts/init
 
 .PHONY: serve
 serve: ## run local development server
-	@poetry run uvicorn slackbox.main:app --host 0.0.0.0 --port 8000 --reload
+	@scripts/serve --host ${TESTED_HOST} --port ${TESTED_PORT}
 
 .PHONY: lint
 lint: ## lint codebase
-	@poetry run pre-commit run -a
+	@scripts/lint-codebase
 
 .PHONY: tests-unit
 tests-unit: ## run unit tests and code coverage
