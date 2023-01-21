@@ -13,6 +13,7 @@ from starlette.exceptions import HTTPException
 
 from slackbox.application.api.exception_handlers import exception_handler
 from slackbox.application.api.resources import health
+from slackbox.application.api.resources import slack
 
 
 def create_app() -> FastAPI:
@@ -20,7 +21,10 @@ def create_app() -> FastAPI:
     app = FastAPI(openapi_url="")
 
     # routers to expose endpoints
-    for resource in (health,):
+    for resource in (
+        health,
+        slack,
+    ):
         app.include_router(resource.router)
 
     # exception handlers to manage errors

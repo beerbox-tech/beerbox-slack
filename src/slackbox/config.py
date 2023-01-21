@@ -21,3 +21,7 @@ VERSION = get_string("VERSION", "dev")
 # identifier generation configuration
 IDENTIFIER_ALPHABET = "abcdefghijklmnopqrstuvxyz"
 IDENTIFIER_SIZE = 8
+
+# slack configuration
+SLACK_BOT_TOKEN = get_string("SLACK_BOT_TOKEN", "token")
+SLACK_SIGNING_SECRET = get_string("SLACK_SIGNING_SECRET", "secret")
